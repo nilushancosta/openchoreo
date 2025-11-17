@@ -34,6 +34,21 @@ func TestPrometheusLabelName(t *testing.T) {
 			kubernetesLabel: "component_name",
 			expected:        "label_component_name",
 		},
+		{
+			name:            "label with dots",
+			kubernetesLabel: "app.kubernetes.io/name",
+			expected:        "label_app_kubernetes_io_name",
+		},
+		{
+			name:            "label with slashes",
+			kubernetesLabel: "example.com/label",
+			expected:        "label_example_com_label",
+		},
+		{
+			name:            "label with mixed special characters",
+			kubernetesLabel: "my-app.test/version",
+			expected:        "label_my_app_test_version",
+		},
 	}
 
 	for _, tt := range tests {
@@ -60,9 +75,9 @@ func TestBuildLabelFilter(t *testing.T) {
 			projectID:     "proj-456",
 			environmentID: "env-789",
 			expectedParts: []string{
-				`label_component_name="comp-123"`,
-				`label_project_name="proj-456"`,
-				`label_environment_name="env-789"`,
+				`label_openchoreo_org_component="comp-123"`,
+				`label_openchoreo_org_project="proj-456"`,
+				`label_openchoreo_org_environment="env-789"`,
 			},
 		},
 		{
@@ -71,9 +86,9 @@ func TestBuildLabelFilter(t *testing.T) {
 			projectID:     "proj_test-456",
 			environmentID: "env_test-789",
 			expectedParts: []string{
-				`label_component_name="comp_test-123"`,
-				`label_project_name="proj_test-456"`,
-				`label_environment_name="env_test-789"`,
+				`label_openchoreo_org_component="comp_test-123"`,
+				`label_openchoreo_org_project="proj_test-456"`,
+				`label_openchoreo_org_environment="env_test-789"`,
 			},
 		},
 		{
@@ -82,9 +97,9 @@ func TestBuildLabelFilter(t *testing.T) {
 			projectID:     "",
 			environmentID: "",
 			expectedParts: []string{
-				`label_component_name=""`,
-				`label_project_name=""`,
-				`label_environment_name=""`,
+				`label_openchoreo_org_component=""`,
+				`label_openchoreo_org_project=""`,
+				`label_openchoreo_org_environment=""`,
 			},
 		},
 	}
@@ -118,7 +133,7 @@ func TestBuildCPUUsageQuery(t *testing.T) {
 			name:        "valid label filter",
 			labelFilter: `label_component_id="comp-123",label_project_id="proj-456"`,
 			expectedParts: []string{
-				"sum by (label_component_name, label_environment_name, label_project_name)",
+				"sum by (label_openchoreo_org_component, label_openchoreo_org_environment, label_openchoreo_org_project)",
 				"rate(container_cpu_usage_seconds_total{container=\"main\"}[2m])",
 				"kube_pod_labels{",
 				`label_component_id="comp-123",label_project_id="proj-456"`,
@@ -128,7 +143,7 @@ func TestBuildCPUUsageQuery(t *testing.T) {
 			name:        "empty label filter",
 			labelFilter: "",
 			expectedParts: []string{
-				"sum by (label_component_name, label_environment_name, label_project_name)",
+				"sum by (label_openchoreo_org_component, label_openchoreo_org_environment, label_openchoreo_org_project)",
 				"rate(container_cpu_usage_seconds_total{container=\"main\"}[2m])",
 				"kube_pod_labels{",
 			},
@@ -163,7 +178,7 @@ func TestBuildMemoryUsageQuery(t *testing.T) {
 			name:        "valid label filter",
 			labelFilter: `label_component_id="comp-123"`,
 			expectedParts: []string{
-				"sum by (label_component_name, label_environment_name, label_project_name)",
+				"sum by (label_openchoreo_org_component, label_openchoreo_org_environment, label_openchoreo_org_project)",
 				"container_memory_working_set_bytes{container=\"main\"}",
 				"kube_pod_labels{",
 				`label_component_id="comp-123"`,
@@ -194,7 +209,7 @@ func TestBuildCPURequestsQuery(t *testing.T) {
 			name:        "valid label filter",
 			labelFilter: `label_component_id="comp-123"`,
 			expectedParts: []string{
-				"sum by (label_component_name, label_environment_name, label_project_name, resource)",
+				"sum by (label_openchoreo_org_component, label_openchoreo_org_environment, label_openchoreo_org_project, resource)",
 				"kube_pod_container_resource_requests{resource=\"cpu\"}",
 				"kube_pod_status_phase{phase=\"Running\"} == 1",
 				"kube_pod_labels{",
@@ -226,7 +241,7 @@ func TestBuildCPULimitsQuery(t *testing.T) {
 			name:        "valid label filter",
 			labelFilter: `label_component_id="comp-123"`,
 			expectedParts: []string{
-				"sum by (label_component_name, label_environment_name, label_project_name, resource)",
+				"sum by (label_openchoreo_org_component, label_openchoreo_org_environment, label_openchoreo_org_project, resource)",
 				"kube_pod_container_resource_limits{resource=\"cpu\"}",
 				"kube_pod_status_phase{phase=\"Running\"} == 1",
 				"kube_pod_labels{",
@@ -258,7 +273,7 @@ func TestBuildMemoryRequestsQuery(t *testing.T) {
 			name:        "valid label filter",
 			labelFilter: `label_component_id="comp-123"`,
 			expectedParts: []string{
-				"sum by (label_component_name, label_environment_name, label_project_name, resource)",
+				"sum by (label_openchoreo_org_component, label_openchoreo_org_environment, label_openchoreo_org_project, resource)",
 				"kube_pod_container_resource_requests{resource=\"memory\"}",
 				"kube_pod_status_phase{phase=\"Running\"} == 1",
 				"kube_pod_labels{",
@@ -290,7 +305,7 @@ func TestBuildMemoryLimitsQuery(t *testing.T) {
 			name:        "valid label filter",
 			labelFilter: `label_component_id="comp-123"`,
 			expectedParts: []string{
-				"sum by (label_component_name, label_environment_name, label_project_name, resource)",
+				"sum by (label_openchoreo_org_component, label_openchoreo_org_environment, label_openchoreo_org_project, resource)",
 				"kube_pod_container_resource_limits{resource=\"memory\"}",
 				"kube_pod_status_phase{phase=\"Running\"} == 1",
 				"kube_pod_labels{",

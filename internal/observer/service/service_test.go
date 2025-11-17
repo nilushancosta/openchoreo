@@ -85,8 +85,8 @@ func TestLoggingService_GetComponentLogs(t *testing.T) {
 						"log":        "INFO: Application started",
 						"kubernetes": map[string]interface{}{
 							"labels": map[string]interface{}{
-								"component-name":   "comp-123",
-								"environment-name": "env-456",
+								"openchoreo.org/component":   "comp-123",
+								"openchoreo.org/environment": "env-456",
 							},
 							"namespace_name": "default",
 						},
@@ -98,8 +98,8 @@ func TestLoggingService_GetComponentLogs(t *testing.T) {
 						"log":        "ERROR: Something went wrong",
 						"kubernetes": map[string]interface{}{
 							"labels": map[string]interface{}{
-								"component-name":   "comp-123",
-								"environment-name": "env-456",
+								"openchoreo.org/component":   "comp-123",
+								"openchoreo.org/environment": "env-456",
 							},
 							"namespace_name": "default",
 						},
@@ -198,9 +198,9 @@ func TestLoggingService_GetProjectLogs(t *testing.T) {
 						"log":        "Project log entry",
 						"kubernetes": map[string]interface{}{
 							"labels": map[string]interface{}{
-								"project-name":     "proj-123",
-								"component-name":   "comp-456",
-								"environment-name": "env-789",
+								"openchoreo.org/project":     "proj-123",
+								"openchoreo.org/component":   "comp-456",
+								"openchoreo.org/environment": "env-789",
 							},
 						},
 					},
@@ -304,8 +304,8 @@ func TestParseLogEntry(t *testing.T) {
 			"log":        "ERROR: Database connection failed",
 			"kubernetes": map[string]interface{}{
 				"labels": map[string]interface{}{
-					"component-name":   "api-service",
-					"environment-name": "production",
+					"openchoreo.org/component":   "api-service",
+					"openchoreo.org/environment": "production",
 					"version":          "v1.2.3",
 					"version_id":       "ver-456",
 				},
@@ -368,8 +368,8 @@ func TestParseLogEntry(t *testing.T) {
 		t.Errorf("Expected 4 labels, got %d", len(entry.Labels))
 	}
 
-	if entry.Labels["component-name"] != "api-service" {
-		t.Errorf("Expected label component-name 'api-service', got '%s'", entry.Labels["component-name"])
+	if entry.Labels["openchoreo.org/component"] != "api-service" {
+		t.Errorf("Expected label openchoreo.org/component 'api-service', got '%s'", entry.Labels["openchoreo.org/component"])
 	}
 }
 

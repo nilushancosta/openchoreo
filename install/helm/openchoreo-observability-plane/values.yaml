@@ -365,7 +365,7 @@ prometheus:
       - kube_pod_status_phase
       # Jobs and Services to be added later
     metricLabelsAllowlist:
-      - pods=[organization-name, project-name, component-name, environment-name]
+      - pods=[organization-name, project-name, component-name, environment-name, openchoreo.org/component, openchoreo.org/environment, openchoreo.org/project]
       # Jobs and Services to be added later
 
   ## Configuration for thanosRuler

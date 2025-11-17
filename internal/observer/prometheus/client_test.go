@@ -77,7 +77,7 @@ func TestConvertToTimeSeriesResponse_Matrix(t *testing.T) {
 		&model.SampleStream{
 			Metric: model.Metric{
 				"__name__":             "cpu_usage",
-				"label_component_name": "test-component",
+				"label_openchoreo_org_component": "test-component",
 			},
 			Values: []model.SamplePair{
 				{
